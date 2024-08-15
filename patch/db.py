@@ -4,7 +4,7 @@ from pymongo.errors import ConnectionFailure
 import os
 
 # 
-MONGO_HOST=os.getenv('MONGO_HOST', 'mongodb://hawkireg.indiatimes2.com')
+MONGO_HOST=os.getenv('MONGO_HOST', '')
 MONGO_PORT=int(os.getenv('MONGO_PORT', 27017))
 MONGO_USER=(os.getenv('MONGO_USER', None))
 MONGO_PASSWORD=(os.getenv('MONGO_PASSWORD', None))
