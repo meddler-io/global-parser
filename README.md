@@ -49,7 +49,7 @@ This tool is ideal for organizations that:
 3. **Run the Container**
 
     ```bash
-    docker run --rm -v /path/to/reports:/reports -v /path/to/output:/output global-parser --parser_id=='Checkmarx Scan' --report_file='/reports/sample_checkmarx_report.xml' --result_file='/output/formatted.jsonl'
+     docker run --rm  -v output:/output global-parser --parser_id='Checkmarx Scan' --report_file='/reports/sample_checkmarx_report.xml' --result_file='/output/formatted.jsonl'
     ```
 
 
