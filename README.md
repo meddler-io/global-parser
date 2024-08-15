@@ -62,3 +62,42 @@ This tool is ideal for organizations that:
 ```bash
 docker run --rm -v /path/to/reports:/reports -v /path/to/output:/output global-parser --parser_id=='Checkmarx Scan' --report_file='/reports/sample_checkmarx_report.xml' --result_file='/output/formatted.jsonl'
 ```
+
+## Configuration Arguments and Environment Variables
+
+### Arguments
+
+When running the application, you can specify the following command-line arguments:
+
+- **`--parser_id`**: Specifies the ID of the parser to use.
+  - **Example**: `--parser_id Checkmarx_Scan`
+
+- **`--report_file`**: Path to the input report file that needs to be processed.
+  - **Example**: `--report_file /path/to/report.xml`
+
+- **`--result_file`**: Path where the output results will be saved.
+  - **Example**: `--result_file /path/to/results.json`
+
+- **`--info`**: Lists all supported parsers.
+  - **Example**: `--info`
+
+### Environment Variables
+
+Alternatively, you can set the following environment variables if you prefer not to use command-line arguments:
+
+- **`parser_id`**: The ID of the parser.
+  - **Example**: `export parser_id=Checkmarx_Scan`
+
+- **`parser_file`**: The path to the report file.
+  - **Example**: `export parser_file=/path/to/report.xml`
+
+- **`parser_result`**: The path to save the results.
+  - **Example**: `export parser_result=/path/to/results.json`
+
+### Help
+
+To view a list of all available arguments and their descriptions, including examples, you can use the `--help` argument:
+
+```bash
+python your_script.py --help
+
