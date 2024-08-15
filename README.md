@@ -98,6 +98,5 @@ Alternatively, you can set the following environment variables if you prefer not
 
 To view a list of all available arguments and their descriptions, including examples, you can use the `--help` argument:
 
-```bash
-python your_script.py --help
+
 
