@@ -37,8 +37,8 @@ ENV BUNDLE_PARSER false
 RUN python3 manage.py migrate
 RUN python3 manage.py flush --no-input
 
-ENTRYPOINT [ "python3" ]
-CMD [ "lib.py" ]
+ENTRYPOINT [ "python3", "lib.py" ]
+
 
 
 
