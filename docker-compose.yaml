@@ -1,9 +1,9 @@
 version: '3'
 services:
-  dojo:
+  global-parser:
     platform: linux/amd64
     build:  .
-    command: lib.py --parser_id='Checkmarx Scan' --report_file='/tmp/checkmarx_sample_report.xml' --result_file='/tmp/output.jsonl'
+    command: --parser_id='Checkmarx Scan' --report_file='/tmp/checkmarx_sample_report.xml' --result_file='/tmp/output.jsonl'
     volumes:
       - ./patch/lib.py:/app/lib.py
       - ./patch/dojo_patch.py:/app/dojo_patch.py

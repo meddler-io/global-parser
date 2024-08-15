@@ -48,10 +48,7 @@ def get_config():
     # New argument to list supported parsers
     parser.add_argument('--info', nargs='?', const=True, type=str, help='Enlist all supported parsers')
 
-    #
-    
-    
-    
+
 
     # Parse the arguments
     args = parser.parse_args()
@@ -72,13 +69,25 @@ def get_config():
 
     # Check if all required values are present
     if not parser_id:
-        raise ValueError("parser_id is missing. Provide it either as an argument or set the 'parser_id' environment variable.")
+        print("parser_id is missing. Provide it either as an argument or set the 'parser_id' environment variable.")
+        sys.exit(1)
     
     if not report_file:
-        raise ValueError("report_file is missing. Provide it either as an argument or set the 'parser_file' environment variable.")
+        print("report_file is missing. Provide it either as an argument or set the 'parser_file' environment variable.")
+        sys.exit(1)
+    
     
     if not result_file:
-        raise ValueError("result_file is missing. Provide it either as an argument or set the 'parser_result' environment variable.")
+        print("result_file is missing. Provide it either as an argument or set the 'parser_result' environment variable.")
+        sys.exit(1)
+    
+    
+    
+    # Check if report_file exists
+    if not os.path.isfile(report_file):
+        print(f"The report file '{report_file}' does not exist. Please provide a valid path.")
+        sys.exit(1)
+        
     
     return parser_id, report_file, result_file
 
@@ -192,7 +201,7 @@ def hit_webhook(endpoint, data={}):
 def core(parser_id, report_file, result_file):
 
     # db_ref, task_msg = parse_message(msg)    
-    findings = singleton_task(parser_id, report_file, result_file)
+    findings = singleton_task(parser_id, report_file)
     save_objects_to_file(findings, result_file)
     
 
@@ -240,14 +249,17 @@ def serialize_model(model_instance):
     # asyncio.run(main())
 
 
-def singleton_task(parser_id, report_file, result_file):
+def singleton_task(parser_id, report_file):
 
-    parser_id = os.environ.get("parser.id")
-    report_file = os.environ.get("parser.file")
-    result_file = os.environ.get("parser.result")
+
+    
     
 
-    parser_ref = factory.PARSERS[parser_id]
+
+    if parser_id not in factory.PARSERS:
+        print("Invalid parser_id. No supported parsers found. Use --info to checko out the list of supported parsers.")
+        sys.exit(1)
+
 
 
     FINDINGS = []
@@ -315,10 +327,8 @@ def singleton_task(parser_id, report_file, result_file):
         # findings = parser_ref.get_findings( open(INPUT_PATH)  , _test  )
 
     except Exception as e:
-        # traceback.print_exc()
-        # Handle the IntegrityError here
         pass
-        # print(f"An error occurred: {e}")
+
 
     return FINDINGS
 
