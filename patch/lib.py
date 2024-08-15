@@ -29,6 +29,60 @@ import csv
 import os
 from bson import json_util
 
+
+import os
+import argparse
+import sys
+
+def get_config():
+    # Set up argument parser
+    parser = argparse.ArgumentParser(description='Get config from arguments or environment variables.')
+    
+    # Define possible arguments
+    parser.add_argument('--parser_id', type=str, help='Parser ID')
+    parser.add_argument('--report_file', type=str, help='Path to the report file')
+    parser.add_argument('--result_file', type=str, help='Path to the result file')
+
+    
+    
+    # New argument to list supported parsers
+    parser.add_argument('--info', nargs='?', const=True, type=str, help='Enlist all supported parsers')
+
+    #
+    
+    
+    
+
+    # Parse the arguments
+    args = parser.parse_args()
+    
+    info_parsers = args.info 
+    if info_parsers:
+        
+        dojo_patch.listParsers()
+        sys.exit(0)
+
+    # Fetch values from arguments or environment variables
+    parser_id = args.parser_id or os.environ.get("parser_id")
+    report_file = args.report_file or os.environ.get("parser._file")
+    result_file = args.result_file or os.environ.get("parser_result")
+    
+    print( parser_id, report_file , result_file )
+    print("+++++")
+
+    # Check if all required values are present
+    if not parser_id:
+        raise ValueError("parser_id is missing. Provide it either as an argument or set the 'parser_id' environment variable.")
+    
+    if not report_file:
+        raise ValueError("report_file is missing. Provide it either as an argument or set the 'parser_file' environment variable.")
+    
+    if not result_file:
+        raise ValueError("result_file is missing. Provide it either as an argument or set the 'parser_result' environment variable.")
+    
+    return parser_id, report_file, result_file
+
+
 def flatten_dict(d, parent_key='', sep='_'):
     items = []
     for k, v in d.items():
@@ -135,16 +189,11 @@ def hit_webhook(endpoint, data={}):
 # msg.data.decode
 
 
-def core():
+def core(parser_id, report_file, result_file):
 
     # db_ref, task_msg = parse_message(msg)    
-    findings = singleton_task()
-    
-    result_file = os.environ.get("parser.result")
-    
+    findings = singleton_task(parser_id, report_file, result_file)
     save_objects_to_file(findings, result_file)
-    
-    print("findings", findings)
     
 
 
@@ -153,10 +202,10 @@ def flushDb():
     # execute_from_command_line(["", "flush", "--no-input"])
 
 
-def message_handler():
+def message_handler(parser_id, report_file, result_file):
     
     flushDb()
-    core()
+    core(parser_id, report_file, result_file)
 
 def getDbSize(arg):
     db_path = os.environ.get("DD_DATABASE_NAME")
@@ -165,61 +214,10 @@ def getDbSize(arg):
     print("db_size", arg,  file_size_mb , "MB", db_path)
     
 
-def main():
-    message_handler()
+def main(parser_id, report_file, result_file):
+    message_handler(parser_id, report_file, result_file)
 
 
-sample_message = {
-    "config": {
-        "action": "updated",
-        "auth_source": None,
-        "collection": "activity_findings",
-        "database": "meddler_app_661d5b5ce847a315c2b3b04d",
-        "host": "192.168.29.194",
-        "password": "test",
-        "port": 27017,
-        "username": "test"
-    },
-    "data": {
-        "_id": {
-            "$oid": "6668a2ef4dee1cad43d752fa"
-        },
-        "config": [
-            {
-                "collection": "_test_collection",
-                "database": "meddler_app_661d5b5ce847a315c2b3b04d"
-            }
-        ],
-        "engagement_id": {
-            "$oid": "6660dd153bb6b047bc26fc25"
-        },
-        "files": [
-            {
-                "filename": "TimesPrime_Polling_Service.xml",
-                "url": "/minio-vapt/6668a264c1db33d797e144f0?response-content-disposition=attachment%3B%20filename%3DTimesPrime_Polling_Service.xml&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=uaaGAF0jnXVHa7KV5eOa%2F20240612%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Date=20240612T123654Z&X-Amz-Expires=604800&X-Amz-SignedHeaders=host&X-Amz-Signature=e8ec6bd6c27ad11a1485409970315fa83953f324f1a35ce969766a96624a7d1e"
-            }
-        ],
-        "meta_data": {
-            "activity_id": {
-                "$oid": "6668a2ef4dee1cad43d752fa"
-            },
-            "enagement_id": {
-                "$oid": "6660dd153bb6b047bc26fc25"
-            },
-            "tags": [
-                "hello"
-            ]
-        },
-        "parser": {
-            "id": "Checkmarx Scan detailed",
-            "type": "dojo"
-        },
-        "tags": [
-            "hello"
-        ]
-    },
-    "status": True
-}
 
 
 def serialize_model(model_instance):
@@ -242,7 +240,7 @@ def serialize_model(model_instance):
     # asyncio.run(main())
 
 
-def singleton_task():
+def singleton_task(parser_id, report_file, result_file):
 
     parser_id = os.environ.get("parser.id")
     report_file = os.environ.get("parser.file")
@@ -319,7 +317,8 @@ def singleton_task():
     except Exception as e:
         # traceback.print_exc()
         # Handle the IntegrityError here
-        print(f"An error occurred: {e}")
+        pass
+        # print(f"An error occurred: {e}")
 
     return FINDINGS
 
@@ -385,11 +384,7 @@ test_message = {
 from django.core.management import execute_from_command_line
 if __name__ == '__main__':
     
-    getDbSize("on-init")
-    # call_command('migrate', 'dojo', fake_initial=True)
-    # execute_from_command_line(["manage.py" ,  "migrate" ])
-    main()
-    getDbSize("after-db")
+    parser_id, report_file, result_file = get_config()
+    
+    main(parser_id, report_file, result_file)
     flushDb()
-    getDbSize("after-flush")
-    # asyncio.run(main())

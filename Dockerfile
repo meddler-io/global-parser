@@ -38,7 +38,7 @@ RUN python3 manage.py migrate
 RUN python3 manage.py flush --no-input
 
 ENTRYPOINT [ "python3" ]
-CMD [ "dojo_patch.py" ]
+CMD [ "lib.py" ]
 
 
 

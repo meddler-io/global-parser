@@ -4,13 +4,13 @@ import django
 FORCE_LOAD_INIT = True
 from django.db import transaction
 
-print("django.setup()")
+
 
 def setEnv(key, val):
     val = str(val)
     os.environ[key] = val
     
-    print("set env", key, val, os.getenv(key))
+
     return val
 
 
@@ -156,7 +156,7 @@ def to_json(findings: List, extra_attributes: dict):
 
 
 def csv_export(findings, extra_attributes: dict):
-    print("csv_export()")
+
     FINDINGS = []
     first_row = True
     
@@ -749,8 +749,12 @@ def entryPoint(message: str):
     # execute_from_command_line( [ "", "flush", "--no-input" ])
 
 # print("boom", factory.get_api_scan_configuration_hints() )
-for parser in enlistToolParser():
-    print("parser.info", parser, factory.PARSERS[parser])
+
+def listParsers():
+    for parser in enlistToolParser():
+        print(parser, )
+        
+
     
 if __name__ == "!__main__":
     entryPoint()
@@ -816,7 +820,7 @@ if __name__ == "__main__":
     DEFAULT_OUTPUT_FILEFORMAT = 'json'
 
     INPUT_DIRECTORY = setEnv("INPUT_DIRECTORY", "/tmp")
-    INPUT_FILENAME = setEnv("INPUT_FILENAME", "timesprime.xml")
+    INPUT_FILENAME = setEnv("INPUT_FILENAME", "sample_file.xml")
 
     PREV_INPUT_DIRECTORY = setEnv("PREV_INPUT_DIRECTORY", INPUT_DIRECTORY)
     PREV_INPUT_FILENAME = setEnv("PREV_INPUT_FILENAME", "input.file")

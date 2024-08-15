@@ -3,9 +3,10 @@ services:
   dojo:
     platform: linux/amd64
     build:  .
-    command: lib.py
+    command: lib.py --parser_id=='Checkmarx Scan' --report_file='/tmp/timesprime.xml' --result_file='/tmp/timesprime.jsonl'
     volumes:
       - ./patch/lib.py:/app/lib.py
+      - ./patch/dojo_patch.py:/app/dojo_patch.py
       - ./tmp:/tmp
 
     environment:
