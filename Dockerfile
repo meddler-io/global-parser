@@ -3,7 +3,6 @@ FROM defectdojo/defectdojo-django:2.37.1
 
 USER root
 
-COPY  ./patch/  /app/
 
 
 RUN pip install --upgrade pip
@@ -36,6 +35,9 @@ ENV BUNDLE_PARSER false
 # RUN python3 manage.py makemigrations dojo
 RUN python3 manage.py migrate
 RUN python3 manage.py flush --no-input
+
+COPY  ./patch/  /app/
+
 
 ENTRYPOINT [ "python3", "lib.py" ]
 
