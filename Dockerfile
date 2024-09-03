@@ -1,4 +1,4 @@
-FROM defectdojo/defectdojo-django:2.37.1
+FROM defectdojo/defectdojo-django:2.38.0
 
 
 USER root
@@ -30,13 +30,13 @@ ENV OUTPUT_FILENAME reports.json
 ENV OUTPUT_FILEFORMAT jsonl
 ENV BUNDLE_PARSER false
 
+COPY  ./patch/  /app/
 
 
 # RUN python3 manage.py makemigrations dojo
 RUN python3 manage.py migrate
 RUN python3 manage.py flush --no-input
 
-COPY  ./patch/  /app/
 
 
 ENTRYPOINT [ "python3", "lib.py" ]
