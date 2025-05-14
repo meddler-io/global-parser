@@ -327,6 +327,7 @@ def singleton_task(parser_id, report_file):
         # findings = parser_ref.get_findings( open(INPUT_PATH)  , _test  )
 
     except Exception as e:
+        traceback.print_exc()
         pass
 
 
