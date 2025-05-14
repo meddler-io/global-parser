@@ -1,4 +1,4 @@
-FROM defectdojo/defectdojo-django:2.38.0
+FROM defectdojo/defectdojo-django:2.46.2
 
 
 USER root
